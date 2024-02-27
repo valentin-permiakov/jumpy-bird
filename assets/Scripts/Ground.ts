@@ -3,16 +3,19 @@
 // Learn Attribute:
 //  - https://docs.cocos.com/creator/2.4/manual/en/scripting/reference/attributes.html
 // Learn life-cycle callbacks:
+
+import GameCtrl from './GameCtrl';
+
 //  - https://docs.cocos.com/creator/2.4/manual/en/scripting/life-cycle-callbacks.html
 const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class Ground extends cc.Component {
-  @property(cc.Node)
+  @property({ type: cc.Node, tooltip: 'this is ground1' })
   public ground1: cc.Node = null;
-  @property(cc.Node)
+  @property({ type: cc.Node, tooltip: 'this is ground2' })
   public ground2: cc.Node = null;
-  @property(cc.Node)
+  @property({ type: cc.Node, tooltip: 'this is ground3' })
   public ground3: cc.Node = null;
 
   // create ground width
@@ -24,7 +27,9 @@ export default class Ground extends cc.Component {
   public tempStartLocarion2 = new cc.Vec3();
   public tempStartLocarion3 = new cc.Vec3();
 
-  public gameSpeed: number = 50;
+  public gameCtrlSpeed = new GameCtrl();
+
+  public gameSpeed: number;
 
   protected onLoad(): void {
     this.startUp();
@@ -45,6 +50,8 @@ export default class Ground extends cc.Component {
   }
 
   update(deltaTime: number) {
+    this.gameSpeed = this.gameCtrlSpeed.speed;
+
     this.tempStartLocarion1 = this.ground1.position;
     this.tempStartLocarion2 = this.ground2.position;
     this.tempStartLocarion3 = this.ground3.position;

@@ -7,6 +7,7 @@
 
 import Bird from './Bird';
 import Ground from './Ground';
+import PipePool from './PipePool';
 import Results from './Results';
 
 const { ccclass, property } = cc._decorator;
@@ -18,6 +19,7 @@ export default class GameCtrl extends cc.Component {
 
   @property({ type: Results, tooltip: 'results here' })
   public result: Results = null;
+
   @property({ type: Bird, tooltip: 'this is the bird' })
   public bird: Bird = null;
 
@@ -26,6 +28,9 @@ export default class GameCtrl extends cc.Component {
 
   @property({ type: cc.Integer })
   public pipeSpeed: number = 200;
+
+  @property({ type: PipePool })
+  public pipeQueue: PipePool;
 
   protected onLoad(): void {
     this.initListener();
@@ -47,7 +52,7 @@ export default class GameCtrl extends cc.Component {
     cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
 
     this.node.on(
-      cc.Node.EventType.MOUSE_DOWN,
+      cc.Node.EventType.TOUCH_START,
       function () {
         this.bird.fly();
       },
@@ -84,6 +89,15 @@ export default class GameCtrl extends cc.Component {
 
   resetGame() {
     this.result.resetScore();
+    this.pipeQueue.reset();
     this.startGame();
+  }
+
+  passPipe() {
+    this.result.addScore();
+  }
+
+  createPipe() {
+    this.pipeQueue.addPool();
   }
 }

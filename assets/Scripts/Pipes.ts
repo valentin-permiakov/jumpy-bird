@@ -5,6 +5,8 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/2.4/manual/en/scripting/life-cycle-callbacks.html
 
+import GameCtrl from './GameCtrl';
+
 const { ccclass, property } = cc._decorator;
 
 const random = (min: number, max: number) => {
@@ -23,7 +25,7 @@ export default class Pipes extends cc.Component {
   public tempStartLocationBottom: cc.Vec3 = new cc.Vec3(0, 0, 0);
   public scene = cc.winSize;
 
-  public game; // speed of the pipes from GameCtrl
+  public game: GameCtrl; // speed of the pipes from GameCtrl
   public pipeSpeed: number; // final speed
   public tempSpeed: number; // temp pipe speed
 

@@ -32,9 +32,12 @@ export default class GameCtrl extends cc.Component {
   @property({ type: PipePool })
   public pipeQueue: PipePool;
 
+  public isOver: boolean;
+
   protected onLoad(): void {
     this.initListener();
     this.result.resetScore();
+    this.isOver = true;
     cc.director.pause();
 
     const physicsManager = cc.director.getPhysicsManager();
@@ -46,18 +49,24 @@ export default class GameCtrl extends cc.Component {
       // cc.PhysicsManager.DrawBits.e_centerOfMassBit |
       cc.PhysicsManager.DrawBits.e_jointBit |
       cc.PhysicsManager.DrawBits.e_shapeBit;
+
+    const collisionManager = cc.director.getCollisionManager();
+    collisionManager.enabled = true;
+    collisionManager.enabledDebugDraw = true;
   }
 
   initListener() {
     cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
 
-    this.node.on(
-      cc.Node.EventType.TOUCH_START,
-      function () {
+    this.node.on(cc.Node.EventType.TOUCH_START, () => {
+      if (this.isOver) {
+        this.resetGame();
+        this.bird.resetBird();
+        this.startGame();
+      } else {
         this.bird.fly();
-      },
-      this
-    );
+      }
+    });
   }
 
   //   testing method, delete me in final version
@@ -74,11 +83,17 @@ export default class GameCtrl extends cc.Component {
       case cc.macro.KEY.q:
         this.resetGame();
         this.bird.resetBird();
+        break;
+
+      case cc.macro.KEY.space:
+        this.bird.fly();
+        break;
     }
   }
 
   startGame() {
     this.result.hideResults();
+    // this.isOver = true;
     cc.director.resume();
   }
 
@@ -90,6 +105,7 @@ export default class GameCtrl extends cc.Component {
   resetGame() {
     this.result.resetScore();
     this.pipeQueue.reset();
+    this.isOver = false;
     this.startGame();
   }
 
@@ -99,5 +115,31 @@ export default class GameCtrl extends cc.Component {
 
   createPipe() {
     this.pipeQueue.addPool();
+  }
+
+  contactGroundPipe() {
+    let collider = this.bird.getComponent(cc.CircleCollider);
+
+    if (collider) {
+      collider.node.on('collision-enter', this.onBeginContact, this);
+    }
+  }
+
+  onBeginContact(otherCollider: cc.Collider, selfCollider: cc.Collider) {
+    this.bird.hitSomething = true;
+  }
+
+  birdStruck() {
+    this.contactGroundPipe();
+
+    if (this.bird.hitSomething) {
+      this.gameOver();
+    }
+  }
+
+  protected update(dt: number): void {
+    if (!this.isOver) {
+      this.birdStruck();
+    }
   }
 }

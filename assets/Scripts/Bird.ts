@@ -23,6 +23,7 @@ export default class Bird extends cc.Component {
 
   public birdAnimation: cc.Animation;
   public birdLocation: cc.Vec3;
+  public hitSomething: boolean;
 
   protected onLoad(): void {
     this.resetBird();
@@ -34,6 +35,7 @@ export default class Bird extends cc.Component {
     this.birdLocation = new cc.Vec3(0, 0, 0);
 
     this.node.setPosition(this.birdLocation);
+    this.hitSomething = false;
   }
 
   fly() {

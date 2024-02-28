@@ -5,6 +5,7 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/2.4/manual/en/scripting/life-cycle-callbacks.html
 
+import Bird from './Bird';
 import Ground from './Ground';
 import Results from './Results';
 
@@ -13,10 +14,12 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class GameCtrl extends cc.Component {
   @property({ type: Ground, tooltip: 'this is ground' })
-  public ground: Ground;
+  public ground: Ground = null;
 
   @property({ type: Results, tooltip: 'results here' })
-  public result: Results;
+  public result: Results = null;
+  @property({ type: Bird, tooltip: 'this is the bird' })
+  public bird: Bird = null;
 
   @property({ type: cc.Integer })
   public speed: number = 300;
@@ -28,10 +31,28 @@ export default class GameCtrl extends cc.Component {
     this.initListener();
     this.result.resetScore();
     cc.director.pause();
+
+    const physicsManager = cc.director.getPhysicsManager();
+    physicsManager.enabled = true;
+    physicsManager.debugDrawFlags =
+      // 0;
+      // cc.PhysicsManager.DrawBits.e_aabbBit |
+      // cc.PhysicsManager.DrawBits.e_pairBit |
+      // cc.PhysicsManager.DrawBits.e_centerOfMassBit |
+      cc.PhysicsManager.DrawBits.e_jointBit |
+      cc.PhysicsManager.DrawBits.e_shapeBit;
   }
 
   initListener() {
     cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
+
+    this.node.on(
+      cc.Node.EventType.MOUSE_DOWN,
+      function () {
+        this.bird.fly();
+      },
+      this
+    );
   }
 
   //   testing method, delete me in final version
@@ -47,6 +68,7 @@ export default class GameCtrl extends cc.Component {
 
       case cc.macro.KEY.q:
         this.resetGame();
+        this.bird.resetBird();
     }
   }
 

@@ -31,6 +31,14 @@ export default class Bird extends cc.Component {
     this.birdAnimation = this.getComponent(cc.Animation);
   }
 
+  onBeginContact(
+    contact: cc.PhysicsContact,
+    otherCollider: cc.Collider,
+    selfCollider: cc.Collider
+  ) {
+    this.hitSomething = true;
+  }
+
   resetBird() {
     this.birdLocation = new cc.Vec3(0, 0, 0);
 

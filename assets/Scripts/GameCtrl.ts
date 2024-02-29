@@ -44,7 +44,7 @@ export default class GameCtrl extends cc.Component {
     physicsManager.enabled = true;
     physicsManager.debugDrawFlags =
       // 0;
-      // cc.PhysicsManager.DrawBits.e_aabbBit |
+      cc.PhysicsManager.DrawBits.e_aabbBit |
       // cc.PhysicsManager.DrawBits.e_pairBit |
       // cc.PhysicsManager.DrawBits.e_centerOfMassBit |
       cc.PhysicsManager.DrawBits.e_jointBit |
@@ -93,13 +93,13 @@ export default class GameCtrl extends cc.Component {
 
   startGame() {
     this.result.hideResults();
-    // this.isOver = true;
     cc.director.resume();
   }
 
   gameOver() {
     this.result.showResults();
     cc.director.pause();
+    this.isOver = true;
   }
 
   resetGame() {
@@ -117,21 +117,7 @@ export default class GameCtrl extends cc.Component {
     this.pipeQueue.addPool();
   }
 
-  contactGroundPipe() {
-    let collider = this.bird.getComponent(cc.CircleCollider);
-
-    if (collider) {
-      collider.node.on('collision-enter', this.onBeginContact, this);
-    }
-  }
-
-  onBeginContact(otherCollider: cc.Collider, selfCollider: cc.Collider) {
-    this.bird.hitSomething = true;
-  }
-
   birdStruck() {
-    this.contactGroundPipe();
-
     if (this.bird.hitSomething) {
       this.gameOver();
     }

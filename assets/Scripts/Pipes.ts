@@ -21,6 +21,11 @@ export default class Pipes extends cc.Component {
   @property({ type: cc.Node, tooltip: 'bottom pipe' })
   public bottomPipe: cc.Node = null;
 
+  @property({ type: cc.Integer, tooltip: 'min distance between pipes' })
+  public minDistance: number = 85;
+  @property({ type: cc.Integer, tooltip: 'max distance between pipes' })
+  public maxDistance: number = 95;
+
   public tempStartLocationTop: cc.Vec3 = new cc.Vec3(0, 0, 0);
   public tempStartLocationBottom: cc.Vec3 = new cc.Vec3(0, 0, 0);
   public scene = cc.winSize;
@@ -42,7 +47,7 @@ export default class Pipes extends cc.Component {
     this.tempStartLocationTop.x = this.topPipe.width + this.scene.width;
     this.tempStartLocationBottom.x = this.bottomPipe.width + this.scene.width;
 
-    let gap = random(90, 100);
+    let gap = random(this.minDistance, this.maxDistance);
     let topHeight = random(0, 450);
 
     this.tempStartLocationTop.y = topHeight;

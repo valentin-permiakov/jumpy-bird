@@ -1,10 +1,16 @@
 {
   "group-list": [
-    "default"
+    "Player",
+    "Environment"
   ],
   "collision-matrix": [
     [
+      false,
       true
+    ],
+    [
+      true,
+      false
     ]
   ],
   "excluded-modules": [

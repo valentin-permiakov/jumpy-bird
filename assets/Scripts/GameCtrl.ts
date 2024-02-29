@@ -6,6 +6,7 @@
 //  - https://docs.cocos.com/creator/2.4/manual/en/scripting/life-cycle-callbacks.html
 
 import Bird from './Bird';
+import BirdAudio from './BirdAudio';
 import Ground from './Ground';
 import PipePool from './PipePool';
 import Results from './Results';
@@ -31,6 +32,9 @@ export default class GameCtrl extends cc.Component {
 
   @property({ type: PipePool })
   public pipeQueue: PipePool;
+
+  @property({ type: BirdAudio })
+  public clip: BirdAudio;
 
   public isOver: boolean;
 
@@ -65,6 +69,7 @@ export default class GameCtrl extends cc.Component {
         this.startGame();
       } else {
         this.bird.fly();
+        this.clip.onAudioQueue(0);
       }
     });
   }
@@ -98,8 +103,10 @@ export default class GameCtrl extends cc.Component {
 
   gameOver() {
     this.result.showResults();
-    cc.director.pause();
     this.isOver = true;
+    this.clip.onAudioQueue(2);
+    this.clip.onAudioQueue(3);
+    cc.director.pause();
   }
 
   resetGame() {
@@ -111,6 +118,7 @@ export default class GameCtrl extends cc.Component {
 
   passPipe() {
     this.result.addScore();
+    this.clip.onAudioQueue(1);
   }
 
   createPipe() {

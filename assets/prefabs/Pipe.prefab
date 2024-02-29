@@ -422,8 +422,8 @@
     "bottomPipe": {
       "__id__": 7
     },
-    "minDistance": 85,
-    "maxDistance": 95,
+    "minDistance": 90,
+    "maxDistance": 100,
     "_id": ""
   },
   {
